@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>סנפיר · שבט הנשיא</title>
+<meta name="theme-color" content="#0f2a36">
+<link rel="icon" href="assets/logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karantina:wght@400;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<canvas id="gl"></canvas>
+
+<div id="hud" class="hidden">
+  <div id="treasures"></div>
+  <div id="obj" class="hidden"><small>משימה</small><span id="objText"></span></div>
+  <div id="stam"><i id="stamBar"></i><small>כוח לזינוק</small></div>
+  <div id="depth"><b id="depthNum">0</b><small>מטר עומק</small></div>
+  <div id="cross"></div>
+  <div id="marker" class="hidden"><i></i><span id="mkDist"></span></div>
+  <div id="prompt" class="hidden"></div>
+  <div id="radio" class="hidden"><div class="rHead"><b id="rName"></b><small id="rRole"></small></div><p id="rText"></p><em>Enter – דלג</em></div>
+</div>
+<div id="card" class="hidden"><small id="cardOver"></small><b id="cardTitle"></b></div>
+<div id="toast" class="hidden"><small id="toastOver"></small><b id="toastText"></b></div>
+<div id="trick" class="hidden"></div>
+<div id="flashOv"></div>
+
+<div id="loading" class="screen"><div class="menuWrap"><img src="assets/logo.webp" alt="" class="menuLogo"><div class="over">ממלאים את הים…</div><div class="bar"><i id="loadBar"></i></div></div></div>
+
+<div id="menu" class="screen hidden">
+  <div class="menuWrap">
+    <img src="assets/logo.webp" alt="" class="menuLogo">
+    <div class="over">שבט הנשיא מציג</div>
+    <h1 class="title">סנפיר</h1>
+    <p class="sub">כל חורף הכרישים באים לחדרה. השנה, כריש צעיר אחד הפך לחניך של השבט.</p>
+    <div class="menuBtns">
+      <button class="btn big" id="btnPlay">משחק חדש</button>
+      <button class="btn" id="btnContinue" disabled>המשך</button>
+      <button class="btn" id="btnFree">שחייה חופשית</button>
+      <button class="btn" id="btnHelp">איך משחקים</button>
+      <button class="btn" id="btnSettings">הגדרות</button>
+    </div>
+  </div>
+</div>
+
+<div id="help" class="screen hidden">
+  <div class="panel">
+    <h2>איך משחקים</h2>
+    <table class="keys">
+      <tr><td><kbd>עכבר</kbd></td><td>לאן שמסתכלים – לשם סנפיר שוחה</td></tr>
+      <tr><td><kbd>W</kbd></td><td>לשחות מהר</td></tr>
+      <tr><td><kbd>S</kbd></td><td>להאט</td></tr>
+      <tr><td><kbd>Shift</kbd></td><td>זינוק – נגמר ומתמלא לאט, דגים ממלאים אותו</td></tr>
+      <tr><td><kbd>רווח</kbd></td><td>לעלות</td></tr>
+      <tr><td><kbd>לחיצה</kbd></td><td>לנשוך: לתפוס דגים, להרים ולשחרר חפצים, לחתוך חבלים</td></tr>
+      <tr><td><kbd>Q</kbd></td><td>חוש כריש – מגלה דברים חבויים</td></tr>
+      <tr><td><kbd>A</kbd> / <kbd>D</kbd></td><td>סיבובים באוויר בזמן קפיצה</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>לדלג על הודעה</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>עצירה</td></tr>
+    </table>
+    <p class="dim">כדי לקפוץ מהמים – שחה מהר ובזווית חדה כלפי מעלה. 24 אוצרות של השבט מתחבאים בכל הים – שחה לידם כדי לאסוף.</p>
+    <button class="btn" data-back>חזרה</button>
+  </div>
+</div>
+
+<div id="settings" class="screen hidden">
+  <div class="panel">
+    <h2>הגדרות</h2>
+    <label class="row">רגישות עכבר <input type="range" id="sSens" min="0.3" max="2.5" step="0.05"></label>
+    <label class="row">עוצמת קול <input type="range" id="sVol" min="0" max="1" step="0.05"></label>
+    <label class="row">היפוך עכבר למעלה/למטה <input type="checkbox" id="sInv"></label>
+    <label class="row">איכות גרפיקה <select id="sQual"><option value="high">גבוהה</option><option value="low">נמוכה (מחשב חלש)</option></select></label>
+    <button class="btn" data-back>חזרה</button>
+  </div>
+</div>
+
+<div id="tlistScr" class="screen hidden">
+  <div class="panel">
+    <h2>אוצרות השבט</h2>
+    <ul class="tlist" id="tlist"></ul>
+    <button class="btn" data-back>חזרה</button>
+  </div>
+</div>
+
+<div id="pause" class="screen hidden">
+  <div class="menuWrap">
+    <h1 class="title small">עצירה</h1>
+    <div class="menuBtns">
+      <button class="btn big" id="btnResume">המשך לשחות</button>
+      <button class="btn" id="btnTreasures">אוצרות השבט</button>
+      <button class="btn" id="btnPHelp">איך משחקים</button>
+      <button class="btn" id="btnPSettings">הגדרות</button>
+      <button class="btn" id="btnQuit">לתפריט הראשי</button>
+    </div>
+  </div>
+</div>
+
+<div id="end" class="screen hidden">
+  <div class="menuWrap">
+    <img src="assets/logo.webp" alt="" class="menuLogo">
+    <div class="over">הים ניצל</div>
+    <h1 class="title small">מה ששומרים ביחד – נשאר</h1>
+    <p class="sub" id="endStats"></p>
+    <div class="menuBtns">
+      <button class="btn big" id="btnEndFree">להמשיך לשחות</button>
+      <button class="btn" id="btnEndMenu">לתפריט</button>
+    </div>
+  </div>
+</div>
+
+<div id="mobileNote" class="hidden">המשחק הזה בנוי למחשב עם עכבר ומקלדת.</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
