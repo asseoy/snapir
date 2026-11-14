@@ -48,7 +48,7 @@ export function createMissions(G, saved) {
   let cheerT = 0; M.cheer = (s = 3) => { cheerT = s; G.sfx && G.sfx('cheer'); };
   function kidsUpdate(dt) { cheerT = Math.max(0, cheerT - dt); kids.forEach((k, i) => { if (k.userData.onRaft) return; const up = cheerT > 0; k.userData.arm1.rotation.z = up ? 2.6 + Math.sin(G.t * 10 + i) * 0.4 : 0.3; k.userData['arm-1'].rotation.z = up ? -2.6 - Math.sin(G.t * 10 + i) * 0.4 : -0.3; k.position.y = W.heightAt(k.position.x, k.position.z) + (up ? Math.abs(Math.sin(G.t * 8 + i)) * 0.4 : 0); }); }
   // the camp flag only flies once Snapir brings it back
-  W.campFlag.mesh.visible = M.step > 7;
+  W.campFlag.mesh.visible = M.step > 7 || G.free;
   if (M.step > 4) G.shark.setRibbon(true);
 
   // ---------- treasures ----------
