@@ -84,3 +84,78 @@ kbd{display:inline-block;font-family:var(--ui);font-weight:700;font-size:13px;pa
 .tlist li.yes::before{content:'';display:inline-block;width:9px;height:9px;background:#4fc39a;margin-left:8px}
 .tlist li.no::before{content:'';display:inline-block;width:9px;height:9px;border:1px solid #555;margin-left:8px}
 @media (max-width:640px){.tlist{columns:1}}
+
+/* ---------- phone / iPad (html.touchdev = touch device at load, html.touch = a real touch happened) ---------- */
+.touchKeys,.tch,#tc{display:none}
+.touchdev .touchKeys,.touch .touchKeys{display:table}
+.touchdev .keys:not(.touchKeys),.touch .keys:not(.touchKeys),.touchdev .desk,.touch .desk{display:none}
+.touchdev .tch,.touch .tch{display:inline}
+.touchdev,.touch{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;touch-action:manipulation;-webkit-text-size-adjust:100%}
+.touchdev #gl,.touch #gl{touch-action:none}
+.touchdev .btn,.touch .btn{min-height:46px}
+.touchdev .btn:hover,.touch .btn:hover{transform:none;border-color:var(--line)}
+.touchdev .btn.big:hover,.touch .btn.big:hover{border-color:#000}
+.touchdev .row input[type=range],.touch .row input[type=range]{width:min(200px,42vw);height:28px}
+.touchdev .row input[type=checkbox],.touch .row input[type=checkbox]{width:24px;height:24px;accent-color:var(--red)}
+.touchdev .panel,.touch .panel{max-height:calc(100% - 24px);padding:20px 18px;-webkit-overflow-scrolling:touch}
+.touchdev .screen,.touch .screen{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+@media (max-width:600px){
+  .touchdev .panel h2,.touch .panel h2{font-size:44px}
+  .touchdev .keys td:first-child,.touch .keys td:first-child{width:auto}
+  .touchdev .sub,.touch .sub{font-size:17px;margin:6px auto 18px;padding:0 10px}
+}
+@media (max-height:560px){
+  .touchdev .menuLogo,.touch .menuLogo{width:48px;margin-bottom:2px}
+  .touchdev .title,.touch .title{font-size:min(14vh,90px)}
+  .touchdev .title.small,.touch .title.small{font-size:min(12vh,60px)}
+  .touchdev .sub,.touch .sub{font-size:15px;margin:2px auto 10px}
+  .touchdev .menuBtns,.touch .menuBtns{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:8px;max-width:640px;margin:0 auto}
+  .touchdev .btn,.touch .btn{min-width:190px;font-size:16px;padding:8px 16px}
+  .touchdev .btn.big,.touch .btn.big{font-size:19px;padding:9px 18px}
+  .touchdev .panel h2,.touch .panel h2{font-size:38px;margin-bottom:6px}
+  .touchdev .tlist,.touch .tlist{columns:2}
+}
+
+/* touch controls */
+.touch #tc{display:block;position:fixed;inset:0;z-index:15;touch-action:none;-webkit-user-select:none;user-select:none}
+.touch #tc.hidden{display:none!important}
+#tc button{font-family:var(--ui);font-weight:700;color:var(--chalk);background:rgba(11,11,11,.62);border:1px solid var(--line);border-radius:0;touch-action:none;-webkit-appearance:none;appearance:none;padding:0}
+#tc button.down{background:var(--yellow);color:var(--ink);border-color:#000}
+#tcJoy{position:absolute;left:calc(env(safe-area-inset-left) + 22px);bottom:calc(env(safe-area-inset-bottom) + 26px);width:124px;height:124px;background:rgba(11,11,11,.32);border:1px solid var(--line);pointer-events:none}
+#tcJoy.on{background:rgba(11,11,11,.45)}
+#tcJoy span{position:absolute;left:0;right:0;text-align:center;font-size:11px;font-weight:700;color:var(--dim);letter-spacing:1px}
+#tcJoy .jUp{top:4px} #tcJoy .jDn{bottom:4px}
+#tcKnob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;background:var(--chalk);border:1px solid #000;opacity:.85}
+#tcPause{position:absolute;left:calc(env(safe-area-inset-left) + 12px);top:calc(env(safe-area-inset-top) + 12px);width:46px;height:46px;display:flex;align-items:center;justify-content:center;gap:6px}
+#tcPause i{display:block;width:6px;height:18px;background:currentColor}
+#tcBtns{position:absolute;right:calc(env(safe-area-inset-right) + 16px);bottom:calc(env(safe-area-inset-bottom) + 20px);width:200px;height:190px}
+.tcb{position:absolute;font-size:16px;width:70px;height:56px}
+#tcBite{right:0;bottom:0;width:96px;height:96px;font-size:21px;background:var(--red);border-color:#000}
+#tcDash{right:108px;bottom:0;height:64px;border-top:3px solid var(--yellow)}
+#tcUp{right:13px;bottom:108px;width:70px}
+#tcSense{right:108px;bottom:76px;width:70px}
+/* HUD moves out of the thumbs' way */
+.touch #stam{bottom:auto;top:calc(env(safe-area-inset-top) + 80px);left:calc(env(safe-area-inset-left) + 12px);width:120px}
+.touch #depth{bottom:auto;top:calc(env(safe-area-inset-top) + 12px);right:auto;left:calc(env(safe-area-inset-left) + 66px);padding:2px 10px}
+.touch #depth b{font-size:30px}
+.touch #treasures{top:calc(env(safe-area-inset-top) + 12px);right:calc(env(safe-area-inset-right) + 12px);font-size:14px;padding:6px 10px}
+.touch #obj{top:calc(env(safe-area-inset-top) + 12px);max-width:calc(100vw - 340px);font-size:16px;padding:5px 12px}
+.touch #prompt{bottom:calc(env(safe-area-inset-bottom) + 228px);font-size:16px;max-width:90vw;text-align:center}
+.touch #radio{bottom:auto;top:calc(env(safe-area-inset-top) + 64px);width:min(560px,calc(100vw - 300px))}
+.touch #rText{font-size:17px}
+.touch #toast{top:auto;bottom:calc(env(safe-area-inset-bottom) + 160px);right:auto;left:50%;transform:translateX(-50%);max-width:80vw}
+.touch #trick{font-size:44px}
+@media (max-width:700px){
+  .touch #obj{top:calc(env(safe-area-inset-top) + 66px);max-width:none;left:calc(env(safe-area-inset-left) + 142px);right:calc(env(safe-area-inset-right) + 12px);transform:none}
+  .touch #radio{top:calc(env(safe-area-inset-top) + 130px);width:auto;left:12px;right:12px;transform:none}
+  .touch #toast{bottom:calc(env(safe-area-inset-bottom) + 236px)}
+  .touch #prompt{bottom:calc(env(safe-area-inset-bottom) + 236px)}
+}
+@media (max-height:500px){
+  #tcJoy{width:112px;height:112px;bottom:calc(env(safe-area-inset-bottom) + 16px)}
+  #tcBtns{bottom:calc(env(safe-area-inset-bottom) + 12px);transform:scale(.88);transform-origin:right bottom}
+  .touch #prompt{bottom:calc(env(safe-area-inset-bottom) + 150px)}
+  .touch #toast{bottom:auto;top:calc(env(safe-area-inset-top) + 64px);left:auto;right:calc(env(safe-area-inset-right) + 12px);transform:none}
+}
+.touchdev .tlist,.touch .tlist{columns:2;column-gap:14px}
+.touchdev .tlist li,.touch .tlist li{font-size:14px;padding:4px 0}

@@ -161,8 +161,8 @@ export function createOcean(G) {
   // ---------- underwater: god rays + marine snow ----------
   const rayTex = (() => { const cv = document.createElement('canvas'); cv.width = 32; cv.height = 256; const x = cv.getContext('2d'); const gr = x.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(255,255,255,.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = gr; x.fillRect(0, 0, 32, 256); const g2 = x.createLinearGradient(0, 0, 32, 0); g2.addColorStop(0, 'rgba(0,0,0,1)'); g2.addColorStop(0.5, 'rgba(0,0,0,0)'); g2.addColorStop(1, 'rgba(0,0,0,1)'); x.globalCompositeOperation = 'destination-out'; x.fillStyle = g2; x.fillRect(0, 0, 32, 256); return new THREE.CanvasTexture(cv); })();
   const rays = []; const rayM = new THREE.MeshBasicMaterial({ map: rayTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, color: 0x9fdcff, opacity: 0.12, fog: false, side: THREE.DoubleSide });
-  for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(3 + Math.random() * 5, 70), rayM.clone()); m.geometry.translate(0, -35, 0); m.userData = { ox: (Math.random() - 0.5) * 70, oz: (Math.random() - 0.5) * 70, ph: Math.random() * 6 }; m.visible = false; S.add(m); rays.push(m); }
-  const snowN = 1500, snowPos = new Float32Array(snowN * 3); for (let i = 0; i < snowN * 3; i++) snowPos[i] = (Math.random() - 0.5) * 60;
+  for (let i = 0; i < (G.touchDev ? 6 : 14); i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(3 + Math.random() * 5, 70), rayM.clone()); m.geometry.translate(0, -35, 0); m.userData = { ox: (Math.random() - 0.5) * 70, oz: (Math.random() - 0.5) * 70, ph: Math.random() * 6 }; m.visible = false; S.add(m); rays.push(m); }
+  const snowN = G.touchDev ? 600 : 1500, snowPos = new Float32Array(snowN * 3); for (let i = 0; i < snowN * 3; i++) snowPos[i] = (Math.random() - 0.5) * 60;
   const snowG = new THREE.BufferGeometry(); snowG.setAttribute('position', new THREE.BufferAttribute(snowPos, 3));
   const snow = new THREE.Points(snowG, new THREE.PointsMaterial({ color: 0xdaf0ff, size: 0.09, transparent: true, opacity: 0.55, depthWrite: false })); snow.frustumCulled = false; S.add(snow);
 

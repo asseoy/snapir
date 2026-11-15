@@ -12,6 +12,7 @@ import { createShark } from './shark.js';
 import { createCreatures } from './creatures.js';
 import { createSwim } from './swim.js';
 import { createMissions } from './missions.js';
+import { initTouch, TOUCH_DEVICE } from './touch.js';
 
 const $ = id => document.getElementById(id);
 const SAVE = 'snapir:save', SET = 'snapir:settings';
@@ -23,11 +24,12 @@ G.settings = Object.assign({ sens: 1, vol: 0.8, invert: false, qual: 'high' }, l
 const go = new URLSearchParams(location.search).get('go');
 const nextFrame = () => new Promise(r => requestAnimationFrame(() => setTimeout(r, 0)));
 const setLoad = p => { $('loadBar').style.width = Math.round(p * 100) + '%'; };
-if (matchMedia('(pointer:coarse)').matches && !matchMedia('(pointer:fine)').matches) $('mobileNote').classList.remove('hidden');
+if (!TOUCH_DEVICE && matchMedia('(pointer:coarse)').matches && !matchMedia('(pointer:fine)').matches) $('mobileNote').classList.remove('hidden');
+G.touchDev = TOUCH_DEVICE;   // phones/iPads: lighter rendering (no bloom/shadows, pixel ratio ≤ 1.25)
 
-const hi = G.settings.qual === 'high';
+const hi = G.settings.qual === 'high' && !TOUCH_DEVICE;
 const renderer = new THREE.WebGLRenderer({ canvas: $('gl'), antialias: !hi, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(devicePixelRatio, hi ? 1.5 : 1)); renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, hi ? 1.5 : TOUCH_DEVICE && G.settings.qual === 'high' ? 1.25 : 1)); renderer.setSize(innerWidth, innerHeight);
 renderer.shadowMap.enabled = hi; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
 G.renderer = renderer; G.scene = new THREE.Scene(); G.camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 6000);
@@ -78,10 +80,11 @@ $('btnEndFree').onclick = () => { G.free = true; G.ended = false; G.cine = false
 $('btnEndMenu').onclick = () => { location.href = location.pathname; };
 addEventListener('keydown', e => { if (e.code === 'Escape' && G.playing && !G.uiOpen) pause(); });
 document.addEventListener('pointerlockchange', () => { if (!document.pointerLockElement && G.playing && !G.uiOpen && !G.ended) pause(); });
-$('gl').addEventListener('click', () => { if (G.playing && !G.uiOpen && !document.pointerLockElement) lock(); });
+$('gl').addEventListener('click', () => { if (G.playing && !G.uiOpen && !document.pointerLockElement && !G.touch) lock(); });
 function lock() { try { const p = $('gl').requestPointerLock(); p && p.catch && p.catch(() => { }); } catch { } }
 function pause() { G.uiOpen = true; show('pause'); G.save && G.save(); }
-function resume() { show(null); G.uiOpen = false; $('hud').classList.remove('hidden'); audio.init(); lock(); }
+function resume() { show(null); G.uiOpen = false; $('hud').classList.remove('hidden'); audio.init(); if (!G.touch) lock(); }
+initTouch(G, { pause, lock, audio: () => { audio.init(); audio.setVol(G.settings.vol); } });
 
 let playStart = 0;
 function start(mode) {

@@ -19,5 +19,6 @@ input.begin = () => {
   input.sprint = !!(k.ShiftLeft || k.ShiftRight);
   input.jump = !!k.Space;
   input.ePressed = input._e; input._e = false;
+  if (input.touchFrame) input.touchFrame();   // phone/iPad controls (js/touch.js), only after a real touch
 };
 input.end = () => { input.mx = 0; input.my = 0; };

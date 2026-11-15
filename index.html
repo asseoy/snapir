@@ -68,6 +68,16 @@
       <tr><td><kbd>Enter</kbd></td><td>לדלג על הודעה</td></tr>
       <tr><td><kbd>Esc</kbd></td><td>עצירה</td></tr>
     </table>
+    <table class="keys touchKeys">
+      <tr><td><kbd>גרירה מימין</kbd></td><td>לאן שמסתכלים – לשם סנפיר שוחה</td></tr>
+      <tr><td><kbd>ג׳ויסטיק שמאלי</kbd></td><td>למעלה – מהר, למטה – לאט, לצדדים – פנייה</td></tr>
+      <tr><td><kbd>זינוק</kbd></td><td>להחזיק – זינוק, נגמר ומתמלא לאט, דגים ממלאים אותו</td></tr>
+      <tr><td><kbd>למעלה</kbd></td><td>להחזיק – לעלות</td></tr>
+      <tr><td><kbd>נשיכה</kbd></td><td>לתפוס דגים, להרים ולשחרר חפצים, לחתוך חבלים</td></tr>
+      <tr><td><kbd>חוש</kbd></td><td>חוש כריש – מגלה דברים חבויים</td></tr>
+      <tr><td><kbd>ג׳ויסטיק באוויר</kbd></td><td>לצדדים – סיבובים בזמן קפיצה</td></tr>
+      <tr><td><kbd>נגיעה בהודעה</kbd></td><td>לדלג על הודעה</td></tr>
+    </table>
     <p class="dim">כדי לקפוץ מהמים – שחה מהר ובזווית חדה כלפי מעלה. 24 אוצרות של השבט מתחבאים בכל הים – שחה לידם כדי לאסוף.</p>
     <button class="btn" data-back>חזרה</button>
   </div>
@@ -76,9 +86,9 @@
 <div id="settings" class="screen hidden">
   <div class="panel">
     <h2>הגדרות</h2>
-    <label class="row">רגישות עכבר <input type="range" id="sSens" min="0.3" max="2.5" step="0.05"></label>
+    <label class="row"><span>רגישות <span class="desk">עכבר</span><span class="tch">מגע</span></span> <input type="range" id="sSens" min="0.3" max="2.5" step="0.05"></label>
     <label class="row">עוצמת קול <input type="range" id="sVol" min="0" max="1" step="0.05"></label>
-    <label class="row">היפוך עכבר למעלה/למטה <input type="checkbox" id="sInv"></label>
+    <label class="row"><span>היפוך <span class="desk">עכבר</span><span class="tch">מבט</span> למעלה/למטה</span> <input type="checkbox" id="sInv"></label>
     <label class="row">איכות גרפיקה <select id="sQual"><option value="high">גבוהה</option><option value="low">נמוכה (מחשב חלש)</option></select></label>
     <button class="btn" data-back>חזרה</button>
   </div>

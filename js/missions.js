@@ -15,14 +15,18 @@ export function createMissions(G, saved) {
   // ---------- radio ----------
   const queue = []; let talking = null, talkT = 0;
   const who = { shira: ['שירה', 'רכזת הטיול', '#f3e03b'], itai: ['איתי', 'חניך', '#8fd0ff'], dana: ['דנה', 'חניכה', '#ffb07a'], kids: ['החניכים', 'מהחוף', '#ffb07a'], dakar: ['הדקר הזקן', 'חי בים 80 שנה', '#d8b07a'], galit: ['גלית', 'דולפינה', '#a8d8ff'], naama: ['נעמה', 'צבת ים', '#9fd890'] };
-  M.say = (k, text, dur) => queue.push({ k, text, dur: dur || Math.max(3.2, text.length * 0.075) });
+  // on a phone/iPad the lines name the on-screen controls instead of keys (desktop text is untouched)
+  const TT = [[/עקוב עם העכבר/g, 'גרור מימין'], [/W – מהר יותר, Shift – זינוק/g, 'ג׳ויסטיק למעלה – מהר יותר, להחזיק זינוק – זינוק'], [/לחיצה על העכבר/g, 'נשיכה'], [/לחיצה נוספת/g, 'נשיכה נוספת'], [/\(לחיצה\)/g, '(נשיכה)'],
+    [/A ו־D מסובבים באוויר/g, 'הג׳ויסטיק לצדדים מסובב באוויר'], [/לחץ Q/g, 'לחץ על חוש'], [/\(Q = חוש כריש\)/g, '(כפתור חוש)'], [/ Q!/g, ' חוש!'], [/\(Shift\)/g, '(להחזיק זינוק)']];
+  const tx = t => G.touch && t ? TT.reduce((s, [r, w]) => s.replace(r, w), t) : t;
+  M.say = (k, text, dur) => { text = tx(text); queue.push({ k, text, dur: dur || Math.max(3.2, text.length * 0.075) }); };
   function radio(dt) {
     if (!talking && queue.length) { talking = queue.shift(); talkT = talking.dur; const w = who[talking.k]; $('radio').classList.remove('hidden'); $('rName').textContent = w[0]; $('rName').style.color = w[2]; $('rRole').textContent = w[1]; $('rText').textContent = talking.text; G.sfx && G.sfx('radio'); }
     if (talking) { talkT -= dt; if (talkT <= 0 || (input.keys.Enter && talkT < talking.dur - 0.4)) { talking = null; if (!queue.length) $('radio').classList.add('hidden'); } }
   }
   // ---------- objective + marker ----------
   let obj = null;
-  M.objective = (text, target) => { obj = { text, target }; $('objText').textContent = text; $('obj').classList.toggle('hidden', !text); };
+  M.objective = (text, target) => { text = tx(text); obj = { text, target }; $('objText').textContent = text; $('obj').classList.toggle('hidden', !text); };
   M.target = () => obj && obj.target ? (typeof obj.target === 'function' ? obj.target() : obj.target) : null;
   function marker() {
     const mk = $('marker'), t = M.target(); if (!t) { mk.classList.add('hidden'); return; }
